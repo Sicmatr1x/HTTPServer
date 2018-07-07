@@ -4,10 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Properties;
 
 public class FileReader {
 
 	private BufferedInputStream fileBis;
+	
+	private Properties fileList;
 
 	private String uri;
 
@@ -17,6 +20,12 @@ public class FileReader {
 
 	public FileReader(String uri) {
 		super();
+		this.uri = uri;
+	}
+
+	public FileReader(String uri, Properties fileList) {
+		super();
+		this.fileList = fileList;
 		this.uri = uri;
 	}
 
@@ -30,7 +39,7 @@ public class FileReader {
 		if (work == null && work.length < 0) {
 			// 500
 		}
-		System.out.println("FileReader:getFileName()" + work[1]);
+		System.out.println("FileReader:getFileName():" + work[1]);
 		return work[1];
 	}
 
@@ -64,10 +73,11 @@ public class FileReader {
 		return file;
 	}
 
-	public BufferedInputStream getFileBufferedInputStream() throws FileNotFoundException {
+	public BufferedInputStream getFileBufferedInputStream() throws FileNotFoundException  {
 		File file = this.getFile();
 		System.out.println("FileReader:getFileBufferedInputStream():" + file.getAbsolutePath());
 		fileBis = new BufferedInputStream(new FileInputStream(file));
+		
 		return fileBis;
 	}
 }

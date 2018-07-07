@@ -73,5 +73,18 @@ public class Response {
 		os.close();
 
 	}
+	
+	public void sendMoveTemporarilyResponse(String hostIP) throws IOException {
+		System.out.println("sendMoveTemporarilyResponse");
+
+		OutputStream os = socket.getOutputStream();
+		os.write("HTTP/1.1 302 Move Temporarily\n".getBytes());
+		if ("text".equals(type)) {
+			os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+			os.write(("Location:" + hostIP + "\n").getBytes());
+		} 
+		os.close();
+
+	}
 
 }

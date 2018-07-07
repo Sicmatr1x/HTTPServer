@@ -3,13 +3,17 @@ package com.joe.controller;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 
+import com.joe.file.PropertiesLoader;
 import com.joe.service.HandlerService;
 
 
 public class Server {
 	
 	private ServerSocket server;
+	
+	private Properties fileList;
 	
 	private int port = 5555;
 	
@@ -23,6 +27,10 @@ public class Server {
 	}
 
 	public void runServer() {
+		System.out.println("loading fileList.properties...");
+		fileList = PropertiesLoader.getFileListProperties("fileList.properties");
+		System.out.println("fileList.properties:" + fileList);
+		
 		try {
 			server = new ServerSocket(port);
 			System.out.println("Http Server has started...");
@@ -30,7 +38,7 @@ public class Server {
 				System.out.println("Http Server linstening in " + port + "...");
 				Socket socket = server.accept();
 				
-				new Thread(new HandlerService(socket)).start();
+				new Thread(new HandlerService(socket, fileList)).start();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

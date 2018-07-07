@@ -27,8 +27,6 @@ public class HandlerService implements Runnable{
 
 	@Override
 	public void run() {
-		
-		
 		try {
 //			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 //			String line;
@@ -70,20 +68,39 @@ public class HandlerService implements Runnable{
 			System.out.println("prepare to send response:" + socket + ","+fileReader.getFileType()+","+bis);
 			Response response = new Response(socket, fileReader.getFileType(), bis);
 			response.sendResponse();
+			bis.close();
 			
-		} catch(FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch(FileNotFoundException ex) {
+			Response response = new Response(socket);
+			try {
+				response.sendNotFoundResponse();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println("HandlerService:run():FileNotFoundException:" + ex.getMessage());
+			
+//			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Response response = new Response(socket);
+			try {
+				response.sendServerErrorResponse();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			System.out.println("HandlerService:run():IOException:" + e.getMessage());
+//			e.printStackTrace();
+		}finally {
+			try {
+				this.socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 	}
 	

@@ -11,6 +11,10 @@ public class FileReader {
 
 	private String uri;
 
+	public FileReader() {
+		super();
+	}
+
 	public FileReader(String uri) {
 		super();
 		this.uri = uri;
@@ -53,6 +57,12 @@ public class FileReader {
 		return file;
 	}
 	
+	public File getNotFoundPageFile() {
+		File root = new File(System.getProperty("user.dir"));
+		File file = new File(root.getAbsoluteFile() + "//webpage//404page.html");
+		System.out.println("FileReader:getFile():" + file.getAbsolutePath());
+		return file;
+	}
 
 	public BufferedInputStream getFileBufferedInputStream() throws FileNotFoundException {
 		File file = this.getFile();

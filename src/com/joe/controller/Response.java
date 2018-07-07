@@ -11,6 +11,10 @@ public class Response {
 	private BufferedInputStream bis;
 	private String type;
 
+	public Response(Socket socket) {
+		this.socket = socket;
+	}
+	
 	public Response(Socket socket, String type, BufferedInputStream bis) {
 		this.type = type;
 		this.socket = socket;
@@ -42,6 +46,30 @@ public class Response {
 
 		}
 		bis.close();
+		os.close();
+
+	}
+	
+	public void sendNotFoundResponse() throws IOException {
+		System.out.println("sendNotFoundResponse");
+
+		OutputStream os = socket.getOutputStream();
+		os.write("HTTP/1.1 404 Not Found\n".getBytes());
+		if ("text".equals(type)) {
+			os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+		} 
+		os.close();
+
+	}
+	
+	public void sendServerErrorResponse() throws IOException {
+		System.out.println("sendNotFoundResponse");
+
+		OutputStream os = socket.getOutputStream();
+		os.write("HTTP/1.1 500 Internal Server Error\n".getBytes());
+		if ("text".equals(type)) {
+			os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+		} 
 		os.close();
 
 	}

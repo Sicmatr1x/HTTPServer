@@ -68,20 +68,33 @@ public class HandlerService implements Runnable {
 			System.out.println("====================================");
 			Request request = new Request(socket.getInputStream());
 			request.parse();
-			System.out.println("------------------------------------");
 			uri = request.getUri();
-			System.out.println("uri:" + uri);
 			System.out.println("====================================");
 
-			FileReader fileReader = new FileReader(uri, fileList);
-			bis = fileReader.getFileBufferedInputStream();
-			System.out.println("prepare to send response:" + socket + "," + fileReader.getFileType() + "," + bis);
-			Response response = new Response(socket, fileReader.getFileType(), bis);
-			response.sendResponse();
-			bis.close();
+			if ("GET".equals(request.getType())) {
+				System.out.println("server handle " + "GET" + " request");
+				FileReader fileReader = new FileReader(uri, fileList);
+				bis = fileReader.getFileBufferedInputStream();
+				System.out.println("prepare to send response:" + socket + "," + fileReader.getFileType() + "," + bis);
+				Response response = new Response(socket, fileReader.getFileType(), bis);
+				response.sendResponse();
+				bis.close();
+			}else if("POST".equals(request.getType().toUpperCase())) {
+				System.out.println("server handle " + "POST" + " request");
+				// TODO
+			}else if("DELETE".equals(request.getType().toUpperCase())) {
+				System.out.println("server handle " + "DELETE" + " request");
+				// TODO
+			}else if("PUT".equals(request.getType().toUpperCase())) {
+				System.out.println("server handle " + "PUT" + " request");
+				// TODO
+			}else {
+				System.out.println("Server not supported request type");
+				// TODO
+			}
 
 		} catch (FileNotFoundException ex) {
-			if(uri == null || "".equals(uri)) {
+			if (uri == null || "".equals(uri)) {
 				try {
 					throw new IOException("HandlerService:run():FileNotFoundException:uri=" + uri);
 				} catch (IOException e) {
@@ -104,9 +117,10 @@ public class HandlerService implements Runnable {
 				}
 				System.out.println("HandlerService:run():" + ex.getMessage() + ",find in:" + hostIP);
 				return;
-			} 
+			}
 			// 若找不到
-			System.out.println("HandlerService:run():FileNotFoundException:" + "could not find " + fileReader.getFileName() + " in fileListt.properties");
+			System.out.println("HandlerService:run():FileNotFoundException:" + "could not find "
+					+ fileReader.getFileName() + " in fileListt.properties");
 			Response response = new Response(socket);
 			try {
 				response.sendNotFoundResponse();

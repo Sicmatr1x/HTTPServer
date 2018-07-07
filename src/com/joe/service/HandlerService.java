@@ -22,6 +22,7 @@ public class HandlerService implements Runnable {
 	private BufferedInputStream bis;
 	private Properties fileList;
 	private BookInterceptorService bookInterceptorService;
+	private Library library;
 
 	public HandlerService(Socket socket) {
 
@@ -33,6 +34,7 @@ public class HandlerService implements Runnable {
 		super();
 		this.socket = socket;
 		this.fileList = fileList;
+		this.library = library;
 		try {
 			this.bookInterceptorService = new BookInterceptorService(socket, library);
 		} catch (IOException e) {
@@ -72,13 +74,16 @@ public class HandlerService implements Runnable {
 				bis.close();
 			}else if("POST".equals(request.getType().toUpperCase())) {
 				System.out.println("server handle " + "POST" + " request");
-				// TODO
+				BookService bookService = new BookService(this.socket, this.library, request);
+				bookService.addBook();
 			}else if("DELETE".equals(request.getType().toUpperCase())) {
 				System.out.println("server handle " + "DELETE" + " request");
-				// TODO
+				BookService bookService = new BookService(this.socket, this.library, request);
+				bookService.delBook();
 			}else if("PUT".equals(request.getType().toUpperCase())) {
 				System.out.println("server handle " + "PUT" + " request");
-				// TODO
+				BookService bookService = new BookService(this.socket, this.library, request);
+				bookService.editBook();
 			}else {
 				System.out.println("Server not supported request type");
 				// TODO
@@ -142,6 +147,14 @@ public class HandlerService implements Runnable {
 			}
 		}
 
+	}
+
+	public Library getLibrary() {
+		return library;
+	}
+
+	public void setLibrary(Library library) {
+		this.library = library;
 	}
 
 }

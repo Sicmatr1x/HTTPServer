@@ -13,6 +13,8 @@ import com.joe.service.HandlerService;
 
 public class Server {
 	
+	public static String LIBRARY_PATH = "library.obj";
+	
 	private ServerSocket server;
 	
 	private Properties fileList;
@@ -34,7 +36,7 @@ public class Server {
 		System.out.println("fileList.properties:" + fileList);
 		
 		System.out.println("loading library.obj...");
-		Library library = Library.initLibraryFromFile(new File("library.obj"));
+		Library library = Library.initLibraryFromFile(new File(Server.LIBRARY_PATH));
 		System.out.println("library.obj:" + library);
 		
 		try {

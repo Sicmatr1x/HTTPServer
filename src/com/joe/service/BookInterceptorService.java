@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.joe.controller.Request;
+import com.joe.controller.Server;
 import com.joe.model.Book;
 import com.joe.model.Library;
 
@@ -96,6 +97,19 @@ public class BookInterceptorService {
 				case "getBookByName":
 					// TODO
 					break;
+				case "saveLibrary":
+					System.out.println("BookInterceptorService:intecept():saveLibrary:start saveing:" + this.library);
+					Library.writeLibraryToFile(new File(Server.LIBRARY_PATH), this.library);
+					Library.initLibraryFromFile(new File(Server.LIBRARY_PATH));
+					System.out.println("BookInterceptorService:intecept():saveLibrary:reload success:" + this.library);
+					this.os.write("<title>Book</title></head>\n".getBytes());
+					this.os.write("<body>".getBytes());
+					this.os.write(("<p>"+ "save library successful" + "</p>").getBytes());
+					this.os.write("</body>\n</html>".getBytes());
+					
+					
+					this.os.close();
+					return true;
 				default:
 					break;
 				}

@@ -9,53 +9,61 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 public class Library implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private Map<String, Book> bookrack;
+	private Hashtable<Integer, Book> bookrack;
 
 	public Library() {
 		super();
 	}
 	
-	public Map<String, Book> createEmptyBookMap() {
+	public void createEmptyBookMap() {
 		this.bookrack = new Hashtable<>();
-		return this.bookrack;
 	}
 	
 	public int addBook(Book book) {
-		if(this.bookrack == null || book == null || book.getName() == null || this.bookrack.containsKey(book.getName())) {
-			return -1;
+		int max = 0;
+		if(!this.bookrack.isEmpty()) {
+			Iterator<Map.Entry<Integer, Book>> it = this.bookrack.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<Integer, Book> entry = it.next();
+				if(max < entry.getKey())
+					max = entry.getKey();
+			}
 		}
-		this.bookrack.put(book.getName(), book);
+		book.setId(max + 1);
+		this.bookrack.put(max + 1, book);
 		System.out.println("Library:addBook():add:" + book + " successful.");
 		return 0;
 	}
 	
-	public int delBook(String bookName) {
-		if(this.bookrack == null || bookName == null || "".equals(bookName) || !this.bookrack.containsKey(bookName)) {
+	public int delBook(Integer bookId) {
+		if(this.bookrack == null || bookId == null || !this.bookrack.containsKey(bookId)) {
 			return -1;
 		}
-		this.bookrack.remove(bookName);
-		System.out.println("Library:delBook():remove:" + bookName + " successful.");
+		this.bookrack.remove(bookId);
+		System.out.println("Library:delBook():remove:" + bookId + " successful.");
 		return 0;
 	}
 	
 	public int editBook(Book book) {
-		System.out.println("Library:editBook():start edit...");
-		if(this.delBook(book.getName()) == -1) {
+		if(this.bookrack == null || book.getId() == null || !this.bookrack.containsKey(book.getId())) {
 			return -1;
 		}
-		if(this.addBook(book) == -1) {
-			return -1;
-		}
-		System.out.println("Library:editBook():end edit:" + book + " successful.");
+		this.bookrack.replace(book.getId(), book);
+		System.out.println("Library:editBook():edit:" + book + " successful.");
 		return 0;
 	}
 	
+	public Hashtable<Integer, Book> getBookrack() {
+		return bookrack;
+	}
+
 	public static Library initLibraryFromFile(File libraryFile) {
 		Library library = null;
 		try {
@@ -90,5 +98,29 @@ public class Library implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "Library [bookrack=" + bookrack + "]";
+	}
+
+	public static void main(String[] args) {
+		Library library = new Library();
+		library.createEmptyBookMap();
+		library.addBook(new Book("Three Body", "LCX", 90.0));
+		library.addBook(new Book("Matrix", "WZSJ", 100.5));
+		library.addBook(new Book("Think in Java", "aaa", 18.5));
+		library.editBook(new Book("Think in Java", "bbb", 78.5));
+		library.delBook(2);
+		Library.writeLibraryToFile(new File("library.obj"), library);
+		Library lib1 = Library.initLibraryFromFile(new File("library.obj"));
+		Map<Integer, Book> br = lib1.getBookrack();
+		Iterator<Map.Entry<Integer, Book>> it = br.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Integer, Book> entry = it.next();
+			System.out.println(entry.getKey() + "," + entry.getValue());
+		}
 	}
 }

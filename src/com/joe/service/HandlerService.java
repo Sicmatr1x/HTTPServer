@@ -14,12 +14,14 @@ import java.util.Properties;
 import com.joe.controller.Request;
 import com.joe.controller.Response;
 import com.joe.file.FileReader;
+import com.joe.model.Library;
 
 public class HandlerService implements Runnable {
 
 	private Socket socket;
 	private BufferedInputStream bis;
 	private Properties fileList;
+	private BookInterceptorService bookInterceptorService;
 
 	public HandlerService(Socket socket) {
 
@@ -27,44 +29,22 @@ public class HandlerService implements Runnable {
 
 	}
 
-	public HandlerService(Socket socket, Properties fileList) {
+	public HandlerService(Socket socket, Properties fileList, Library library) {
 		super();
 		this.socket = socket;
 		this.fileList = fileList;
+		try {
+			this.bookInterceptorService = new BookInterceptorService(socket, library);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void run() {
 		String uri = null;
 		try {
-			// BufferedReader bufferedReader = new BufferedReader(new
-			// InputStreamReader(socket.getInputStream(), "utf-8"));
-			// String line;
-			// String head = "";
-			// for(int i = 0; i < 20; i++) {
-			// line = bufferedReader.readLine();
-			// System.out.println("for:"+line);
-			// }
-			// while((line = bufferedReader.readLine()) != null) {
-			// System.out.println("HandlerService:"+line);
-			// head+=line;
-			// if("".equals(line)) {
-			// break;
-			// }
-			// }
-			// line = null;
-			// line = bufferedReader.readLine();
-			// if(line == null) {
-			//
-			// }else {
-			// while((line = bufferedReader.readLine()) != null) {
-			// System.out.println("HandlerService:"+line);
-			// head.append(line);
-			// if("".equals(line)) {
-			// break;
-			// }
-			// }
-			// }
 			System.out.println("====================================");
 			Request request = new Request(socket.getInputStream());
 			request.parse();
@@ -72,6 +52,17 @@ public class HandlerService implements Runnable {
 			System.out.println("====================================");
 
 			if ("GET".equals(request.getType())) {
+				// inceptor GET request
+				if(this.bookInterceptorService.intecept(request)) {
+					try {
+						this.socket.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return;
+				}
+				
 				System.out.println("server handle " + "GET" + " request");
 				FileReader fileReader = new FileReader(uri, fileList);
 				bis = fileReader.getFileBufferedInputStream();

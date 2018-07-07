@@ -8,6 +8,9 @@ import java.net.Socket;
 public class Response {
 
 	private Socket socket;
+	/**
+	 * 本地读取文件
+	 */
 	private BufferedInputStream bis;
 	private String type;
 
@@ -34,7 +37,6 @@ public class Response {
 		} else if ("image".equals(type)) {
 			os.write("Content-Type: image/jpeg;charset=utf-8\n".getBytes());
 		} else {
-			// 500
 			os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
 		}
 

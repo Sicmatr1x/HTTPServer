@@ -1,24 +1,28 @@
 package com.joe.model;
 
-public class Book {
-	private int id;
+import java.io.Serializable;
+
+public class Book implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private Integer id;
 	private String name;
-	private double prise;
+	private Double prise;
 	private String auther;
 	public Book() {
 		
 	}
-	public Book(int id, String name, double prise, String auther) {
+	public Book(String name, String auther, Double prise) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.prise = prise;
 		this.auther = auther;
 	}
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -30,7 +34,7 @@ public class Book {
 	public double getPrise() {
 		return prise;
 	}
-	public void setPrise(double prise) {
+	public void setPrise(Double prise) {
 		this.prise = prise;
 	}
 	public String getAuther() {

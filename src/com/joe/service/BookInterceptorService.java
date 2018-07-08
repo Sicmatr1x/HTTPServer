@@ -66,53 +66,54 @@ public class BookInterceptorService {
 						Book book = entry.getValue();
 						this.os.write(("<tr>\n<td>\n" + book.getId() + "</td>\n<td>" + book.getName() + "</td>\n<td>"
 								+ book.getAuther() + "</td>\n<td>" + book.getPrise() + "</td>\n</tr>\n").getBytes());
-						System.out.println("BookInterceptorService:intecept():"+entry.getKey() + "," + entry.getValue());
+						System.out.println(
+								"BookInterceptorService:intecept():" + entry.getKey() + "," + entry.getValue());
 					}
 					this.os.write("</table>\n".getBytes());
 					this.os.write("</body>\n</html>".getBytes());
-					
+
 					this.os.close();
 					return true;
 				}
 				String[] getArg = work[2].split("[?]");
-//				System.out.println("BookInterceptorService:intecept():getArg[0]=" + getArg[0]);
-//				System.out.println("BookInterceptorService:intecept():getArg[1]=" + getArg[1]);
-				switch (getArg[0]) {
-				case "getBookById":
-					String[] args = getArg[1].split("=");
-					Book book = this.library.getBookrack().get(Integer.valueOf(args[1]));
+				// System.out.println("BookInterceptorService:intecept():getArg[0]=" +
+				// getArg[0]);
+				// System.out.println("BookInterceptorService:intecept():getArg[1]=" +
+				// getArg[1]);
+
+				if (getArg[0].matches("\\d+")) {
+					Book book = this.library.getBookrack().get(Integer.valueOf(getArg[0]));
 					this.os.write(html.getBytes());
 					this.os.write("<title>Book List</title></head>\n".getBytes());
 					this.os.write("<body>".getBytes());
-					this.os.write("<table border=\"1\">\n".getBytes());
-					this.os.write(("<tr>\n<td>\n" + book.getId() + "</td>\n<td>" + book.getName() + "</td>\n<td>"
-							+ book.getAuther() + "</td>\n<td>" + book.getPrise() + "</td>\n</tr>\n").getBytes());
-					this.os.write("</table>\n".getBytes());
-					this.os.write("</body>\n</html>".getBytes());
-					System.out.println("BookInterceptorService:intecept():getBookById"+book);
-					
+					if (book != null) {
+						this.os.write("<table border=\"1\">\n".getBytes());
+						this.os.write(("<tr>\n<td>\n" + book.getId() + "</td>\n<td>" + book.getName() + "</td>\n<td>"
+								+ book.getAuther() + "</td>\n<td>" + book.getPrise() + "</td>\n</tr>\n").getBytes());
+						this.os.write("</table>\n".getBytes());
+						this.os.write("</body>\n</html>".getBytes());
+						System.out.println("BookInterceptorService:intecept():getBookById" + book);
+					}else { // not found the book
+						this.os.write(("<p>"+ "not find id=" + getArg[0] + " book in the library." +"</p>").getBytes());
+						this.os.write("</body>\n</html>".getBytes());
+					}
+
 					this.os.close();
 					return true;
-					
-				case "getBookByName":
-					// TODO
-					break;
-				case "saveLibrary":
+				} else if ("saveLibrary".equals(getArg[0])) {
 					System.out.println("BookInterceptorService:intecept():saveLibrary:start saveing:" + this.library);
 					Library.writeLibraryToFile(new File(Server.LIBRARY_PATH), this.library);
 					Library.initLibraryFromFile(new File(Server.LIBRARY_PATH));
 					System.out.println("BookInterceptorService:intecept():saveLibrary:reload success:" + this.library);
 					this.os.write("<title>Book</title></head>\n".getBytes());
 					this.os.write("<body>".getBytes());
-					this.os.write(("<p>"+ "save library successful" + "</p>").getBytes());
+					this.os.write(("<p>" + "save library successful" + "</p>").getBytes());
 					this.os.write("</body>\n</html>".getBytes());
-					
-					
+
 					this.os.close();
 					return true;
-				default:
-					break;
 				}
+
 			}
 		}
 		return false;

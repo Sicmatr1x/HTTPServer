@@ -47,8 +47,8 @@ public class BookService {
 	public void addBook() throws IOException {
 		Map<String, String> argsMap = this.getArgsMap();
 		Book book = new Book();
-		book.setName(argsMap.get("name").replaceAll("[+]", " "));
-		book.setAuther(argsMap.get("auther").replaceAll("[+]", " "));
+		book.setName(argsMap.get("name").replaceAll("%20", " "));
+		book.setAuther(argsMap.get("auther").replaceAll("%20", " "));
 		if(argsMap.get("prise") != null) {
 			book.setPrise(Double.valueOf(argsMap.get("prise")));
 		}
@@ -69,8 +69,8 @@ public class BookService {
 		if(argsMap.get("id") != null) {
 			book.setId(Integer.valueOf(argsMap.get("id")));
 		}
-		book.setName(argsMap.get("name").replaceAll("[+]", " "));
-		book.setAuther(argsMap.get("auther").replaceAll("[+]", " "));
+		book.setName(argsMap.get("name").replaceAll("%20", " "));
+		book.setAuther(argsMap.get("auther").replaceAll("%20", " "));
 		if(argsMap.get("prise") != null) {
 			book.setPrise(Double.valueOf(argsMap.get("prise")));
 		}

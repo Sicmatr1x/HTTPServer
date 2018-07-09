@@ -47,7 +47,7 @@ public class Request {
     
     public String parseRequestType(String request) {
     	String[] work = request.split("\n");
-//        System.out.println("work=" + work[0]);
+        System.out.println("Request.parseRequestType=" + work[0]);
         String[] args = work[0].split(" ");
         this.type = args[0];
         return this.type;
@@ -59,11 +59,12 @@ public class Request {
     	
     	for(int i = 0; i < work.length; i++) {
 //    		System.out.println("work[" + i + "]=" + work[i]);
-    		if(work[i].contains("Content-Length")) {
+    		if((work[i].toUpperCase()).contains("Content-Length".toUpperCase())) {
     			int length = 0;
 				try {
 					String[] temp = work[i].replaceAll(new String(b, "utf-8"), "").split(" ");
 					length = Integer.valueOf(temp[1]);
+					System.out.println("Request:parseRequestBody:Content-Length=" + length);
 				} catch (NumberFormatException | UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

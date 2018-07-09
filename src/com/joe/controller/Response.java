@@ -9,7 +9,7 @@ public class Response {
 
 	private Socket socket;
 	/**
-	 * 本地读取文件
+	 * æœ¬åœ°è¯»å�–æ–‡ä»¶
 	 */
 	private BufferedInputStream bis;
 	private String type;
@@ -57,9 +57,10 @@ public class Response {
 
 		OutputStream os = socket.getOutputStream();
 		os.write("HTTP/1.1 404 Not Found\n".getBytes());
-		if ("text".equals(type)) {
-			os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
-		} 
+		os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+		
+		os.write("\n".getBytes());
+		os.write("<h1>404 Not Found</h1>".getBytes());
 		os.close();
 
 	}
@@ -69,9 +70,10 @@ public class Response {
 
 		OutputStream os = socket.getOutputStream();
 		os.write("HTTP/1.1 500 Internal Server Error\n".getBytes());
-		if ("text".equals(type)) {
-			os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
-		} 
+		
+		os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+		
+		os.write("\n".getBytes());
 		os.close();
 
 	}
@@ -81,10 +83,10 @@ public class Response {
 
 		OutputStream os = socket.getOutputStream();
 		os.write("HTTP/1.1 302 Move Temporarily\n".getBytes());
-		if ("text".equals(type)) {
-			os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
-			os.write(("Location:" + hostIP + "\n").getBytes());
-		} 
+		os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+		os.write(("Location:" + hostIP + "\n").getBytes());
+		
+		os.write("\n".getBytes());
 		os.close();
 
 	}

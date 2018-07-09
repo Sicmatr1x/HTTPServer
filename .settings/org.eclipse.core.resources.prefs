@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/com/joe/controller/Request.java=UTF-8
+encoding//src/com/joe/controller/Response.java=UTF-8
+encoding//src/com/joe/service/HandlerService.java=UTF-8
+encoding/<project>=UTF-8

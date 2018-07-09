@@ -43,17 +43,20 @@ public class BookInterceptorService {
 		if (work.length < 1) {
 			System.out.println("BookInterceptorService:intecept():work.length=" + work.length);
 		} else if (work.length >= 1) {
-			System.out.println("BookInterceptorService:intecept():work[1]=" + work[1]);
-
-			// head
-			os.write("HTTP/1.1 200 OK\n".getBytes());
-			this.os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
-			os.write("\n".getBytes());
-			// body
-
-			String html = "<!DOCTYPE html>\n" + "<html>\n" + "<head>\n" + "<meta charset=\"utf-8\">\n";
+			
 
 			if ("book".equals(work[1])) {
+				System.out.println("BookInterceptorService:intecept():work[1]=" + work[1]);
+
+				// head
+				os.write("HTTP/1.1 200 OK\n".getBytes());
+				this.os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+				os.write("\n".getBytes());
+				// body
+
+				String html = "<!DOCTYPE html>\n" + "<html>\n" + "<head>\n" + "<meta charset=\"utf-8\">\n";
+				
+				
 				if (work.length == 2) {
 					Map<Integer, Book> br = this.library.getBookrack();
 					Iterator<Map.Entry<Integer, Book>> it = br.entrySet().iterator();

@@ -54,6 +54,13 @@ public class HandlerService implements Runnable {
 			System.out.println("====================================");
 
 			if ("GET".equals(request.getType())) {
+//				OutputStream os = socket.getOutputStream();
+//				os.write("HTTP/1.1 404 Not Found\n".getBytes());
+//				os.write("Content-Type: text/html;charset=utf-8\n".getBytes());
+//				os.write("\n".getBytes());
+//				os.close();
+//				return;
+				
 				// inceptor GET request
 				if(this.bookInterceptorService.intecept(request)) {
 					try {
@@ -99,11 +106,11 @@ public class HandlerService implements Runnable {
 				}
 			}
 			FileReader fileReader = new FileReader(uri);
-			// 查找本地fileList.properties文件
+			// æŸ¥æ‰¾æœ¬åœ°fileList.propertiesæ–‡ä»¶
 			String hostIP = null;
 			hostIP = fileList.getProperty(fileReader.getFileName());
 			if (hostIP != null) {
-				// 发送跳转报文
+				// å�‘é€�è·³è½¬æŠ¥æ–‡
 				Response response = new Response(socket);
 				try {
 					response.sendMoveTemporarilyResponse(hostIP);
@@ -114,7 +121,7 @@ public class HandlerService implements Runnable {
 				System.out.println("HandlerService:run():" + ex.getMessage() + ",find in:" + hostIP);
 				return;
 			}
-			// 若找不到
+			// è‹¥æ‰¾ä¸�åˆ°
 			System.out.println("HandlerService:run():FileNotFoundException:" + "could not find "
 					+ fileReader.getFileName() + " in fileListt.properties");
 			Response response = new Response(socket);
